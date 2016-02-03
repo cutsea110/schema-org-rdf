@@ -90,23 +90,12 @@ def get_type_details(url):
 
 
     # Check if subtypes exist
-    for checkBoldTextHeadlines in root.cssselect("b"):
-        if checkBoldTextHeadlines.text_content().strip() == 'More specific Types':
-            # If there are any check if there are also "more specific types"
-            # defines which offsets the location of the subtypes
-            subtypeIndex = 0
-            for checkHeadline in root.cssselect("h4"):
-                if checkHeadline.text_content().strip() == 'More specific Types available in extensions':
-                    subtypeIndex = 1
-                    break;
-
-            row = root.cssselect("#mainContent > ul:nth-last-of-type(%d)" % subtypeIndex)
-            if len(row) > 0:
-                for a in row[0].cssselect("li a"):
-                    type['subtypes'].append(a.text_content().strip())
-
-
-            break;
+    row = root.cssselect("#mainContent > b:contains('More specific Types') + ul li a")
+    if len(row) > 0:
+      for a in row:
+        type['subtypes'].append(a.text_content().strip())
+    else:
+      type['subtypes'] = []
 
     type['properties'] = []
     type['specific_properties'] = []
